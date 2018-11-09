@@ -63,33 +63,38 @@
 		  width="30%" @open='open()'>
 		  {{uDialog.form}}
 		  <!-- 模态框表单开始 -->
-            <el-form :model='uDialog.form' ref='uDialog.form' :rules='rules'>
-             	 <el-form-item label='教师姓名' label-width="6em"> 
+            <el-form :model='uDialog.form' ref='uDialog.form' :rules='rules' size='small'>
+             	 <el-form-item label='教师姓名' label-width="6em" prop='name'> 
              	    <el-input v-model='uDialog.form.name'></el-input>  	 
              	 </el-form-item>
-             	 <el-form-item label='性别' label-width="4em"> 
+             	 <el-form-item label='性别' label-width="4em" prop='gender'> 
              	    <el-radio v-model="uDialog.form.gender" label="男">男</el-radio>
                      <el-radio v-model="uDialog.form.gender" label="女">女</el-radio> 	 
              	 </el-form-item>
-             	 <el-form-item label='出生日期' label-width="6em">
+             	 <el-form-item label='出生日期' label-width="6em" prop='birth'>
              	 	 <el-date-picker
 					    v-model="uDialog.form.birth"
 					    type="date"
 					    placeholder="选择日期">
 					 </el-date-picker>
              	 </el-form-item>
-             	  <el-form-item label='入职时间' label-width="6em">
+             	  <el-form-item label='入职时间' label-width="6em" prop='hiredate'>
              	 	 <el-date-picker
 					    v-model="uDialog.form.hiredate"
 					    type="date"
 					    placeholder="选择日期">
 					 </el-date-picker>
              	 </el-form-item>
+             	  <el-form-item label='职称' label-width="6em" prop='type' size='small'>
+             	 	<el-select v-model='uDialog.form.type'>
+             	 		<el-option :key='value' v-for='value in type' :value='value' :label='value' ></el-option>
+             	 	</el-select>
+             	 </el-form-item>
              </el-form>
           <!-- 模态框表单结束 -->
 		  <span slot="footer" class="dialog-footer">
 		    <el-button @click="uDialog.visible = false">取 消</el-button>
-		    <el-button type="primary" @click="saveOrUpdateCourse('uDialog.form')">确定</el-button>
+		    <el-button type="primary" @click="saveOrUpdateUser('uDialog.form')">确定</el-button>
 		  </span>
 		</el-dialog>
 		<!-- 模态框结束 -->
@@ -111,11 +116,18 @@
                 },
                 //表单验证规则
                 rules:{
-               	  name:[{ required: true, message: '课程不能为空',trigger:'blur'
+               	  name:[{ required: true, message: '姓名不能为空',trigger:'blur'
                	}],
-               	period:[{ required: true, message: '请选择课程周期',trigger:'blur'
+               	gender:[{ required: true, message: '请选择性别',trigger:'blur'
+               	}],
+               	birth:[{ required: true, message: '请选择出生日期',trigger:'blur'
+               	}],
+               	hiredate:[{ required: true, message: '请选择入职时间',trigger:'blur'
+               	}],
+               	type:[{ required: true, message: '请选择职称',trigger:'blur'
                	}]
-               }
+                },
+                type:['讲师','副教授','教授','副院长','院长']        //用户默认职称
          	}
          },
          mounted(){
@@ -131,7 +143,9 @@
          methods:{
          	// 模态框打开时清除表单验证
          	open(){
-
+                if(this.$refs['uDialog.form']){
+				  this.$refs['uDialog.form'].clearValidate();
+		        }
          	},
              //查询所有用户
              findAll(){
@@ -143,12 +157,29 @@
              // 弹出添加模态框
              toAddUser(){
                  this.uDialog.title='添加',
-                 this.uDialog.visible=true
+                 this.uDialog.visible=true,
+                 this.uDialog.form={}
 
              },
              //弹出修改模态框
-             toUpdateUser(){
-
+             toUpdateUser(row){
+                  this.uDialog.title='修改',
+                  this.uDialog.visible=true,
+                 //将单行信息复制，解决模态框表单数据改变表格跟着改变的问题
+                  Object.assign(this.uDialog.form,row);
+             },
+             saveOrUpdateUser(form){
+             	//表单验证通过则提交
+                this.$refs[form].validate((valid) => {
+					if (valid) {
+                        axios.get('/user/saveOrUpdate')
+                        .then(({dat:result})=>{
+                            console.log(result.data);
+                        })
+				    }else{
+				    	return false;
+				    }
+				});
              },
              //删除单个用户
              deleteUser(){
