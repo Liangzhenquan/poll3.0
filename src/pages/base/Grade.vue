@@ -50,7 +50,7 @@
 		  :title="gDialog.title"
 		  :visible.sync="gDialog.visible"
 		  width="30%" @open='open()'>
-		  {{gDialog.form}}
+		  
 		  <!-- 模态框表单开始 -->
           <el-form :model="gDialog.form" ref="gDialog.form" :rules='rules'>
           	   <el-form-item label="年级名称"  label-width="6em" prop='name'  size='small' >

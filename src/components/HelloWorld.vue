@@ -10,7 +10,7 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: '项目尚未完善'
+      msg: '项目正在完善中，请耐心等待...（由于后台原因，部分功能暂时无法实现）'
     }
   }
 }

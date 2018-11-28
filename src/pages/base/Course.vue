@@ -51,7 +51,7 @@
 		:title="cDialog.title"
 		:visible.sync="cDialog.visible"
 		width="30%" @open='open()'>
-		{{cDialog.form}}
+	
 		<!-- 模态框表单开始 -->
 		<el-form :model='cDialog.form' ref='cDialog.form' :rules='rules'>
 			<el-form-item label='课程名称' label-width="6em" size='small' prop='name'>
