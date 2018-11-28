@@ -166,15 +166,17 @@
              	this.uDialog.title='修改',
              	this.uDialog.visible=true,
                  //将单行信息复制，解决模态框表单数据改变表格跟着改变的问题
-                 Object.assign(this.uDialog.form,row);
+                 // Object.assign(this.uDialog.form,row);
+                 this.uDialog.form=JSON.parse(JSON.stringify(row));
              },
              saveOrUpdateUser(form){
              	//表单验证通过则提交
+             	console.log(form)
              	this.$refs[form].validate((valid) => {
              		if (valid) {
-             			axios.get('/user/saveOrUpdate')
-             			.then(({dat:result})=>{
-             				console.log(result.data);
+             			axios.post('/user/saveOrUpdate',this.uDialog.form)
+             			.then(({data:result})=>{
+             				this.user=result.data;
              			})
              		}else{
              			return false;
@@ -182,8 +184,21 @@
              	});
              },
              //删除单个用户
-             deleteUser(){
-
+             deleteUser(id){
+             	this.$confirm('此操作将永久删除该班级, 是否继续?', '提示', {
+	        		confirmButtonText: '确定',
+	        		cancelButtonText: '取消',
+	        		type: 'warning'
+        	    }).then(() => {
+	                 axios.get('/user/deleteById',{
+	                 	params:{
+	                 		id
+	                 	}
+	                 })
+	                 .then((result)=>{
+	                     this.findAll();
+	                 })
+	            })
              },
              //批量删除
              batchDeleteUser(){
