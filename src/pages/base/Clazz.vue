@@ -2,7 +2,8 @@
 <div class="class">
 	<!-- 搜索区开始 -->
 	<div class="search">
-		<el-select v-model='grade.id' placeholder='所有年级' size="small">
+		<el-select v-model='grade.id' placeholder='所有年级' size="small" @change='searchGrade'>
+            <el-option value='0' label='所有年级'>所有年级</el-option>
 			<el-option v-for='g in grade' :key='g.id' :label='g.name' :value='g.id'></el-option>
 		</el-select>
 	</div>
@@ -119,15 +120,15 @@ export default {
 }
 },
 mounted(){
-this.findAllVM();
+  this.findAllVM();  
+  this.findAllGrade();  //查询所有年级
 },
 methods:{
 open(){
     		//清除表单验证结果
-    		if(this.$refs['cDialog.form']){
+    	if(this.$refs['cDialog.form']){
     			this.$refs['cDialog.form'].clearValidate();
     		}
-
     	},
     	// 查询所有信息
     	findAllVM(){
@@ -140,7 +141,7 @@ open(){
         findAllGrade(){
         	axios.get("/grade/findAll")
         	.then(({data:result})=>{
-        		this.grade=result.data;
+        		this.grade=result.data;      
         	})
         	.catch()
         },
@@ -151,7 +152,6 @@ open(){
         		this.user=result.data;
         	})
         },
-
         //弹出添加模态框
         toAddClazz(){
         	this.cDialog.title='添加班级',
@@ -249,7 +249,28 @@ open(){
         			type: 'warning'
         		});
         	}
-        },  
+        },
+        //根据下拉选择框查找年级下所有班级 
+        searchGrade(val){
+            if(val!=0){
+                let clazz=[];
+                axios.get("/clazz/findAllVM")
+                .then(({data:result})=>{
+                    clazz=result.data;   
+                    this.clazz.splice(0,this.clazz.length);
+                    this.clazz=clazz.filter((item)=>{
+                        return item.grade.id==val;
+                    });
+                     
+                })
+                .catch()
+            }else{
+                this.findAllVM();
+            }
+
+        
+
+        },
         handleSelectionChange(val){
         	this.multipleSelection=val;
         }

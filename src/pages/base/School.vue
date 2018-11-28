@@ -55,13 +55,9 @@
 	        		}
 	        	})
 	        	.then(({data:result})=>{
-	        		console.log(result.data);
                    this.school.push(result.data);
-                   console.log(this.school);
-
 	        	})
 	        	.catch(()=>{
-
 	        	})
 	        }
         }

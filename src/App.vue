@@ -137,7 +137,7 @@
     width: 100%;
     height: 60px;
     top: 0;
-    background-color: teal;   
+    background-color: #3c8dbc;   
     padding: 0 1em; 
   }
   .header .title {
@@ -176,16 +176,22 @@
   .center > .left-nav {
     width: 180px;
     height: 100%;
+    background-color: #222d32;
     float: left;
   }
   .center > .left-nav > ul {
-
+    background-color: #222d32;
+ 
   }
   .center > .left-nav > ul > li{
     line-height: 2.6em;
     text-align: center;
+    color: #fff;
     border-bottom: 1px solid #f0f0f0;
     position: relative;
+  }
+  .center > .left-nav > ul > li a{
+    color: #fff;
   }
   .center > .left-nav > ul > li i.fa {
     position: absolute;
@@ -199,7 +205,7 @@
     left: 3em;
   }
   .center > .left-nav > ul > li.current {
-    background-color: #f0f0f0;
+    background-color: teal
   }
   .center > .content {
     margin-left: 180px;
